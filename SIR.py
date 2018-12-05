@@ -12,7 +12,7 @@ import random as rd
 # 初始化
 BETA = 0.5  # 感染率
 GAMMA = 0.2  # 治愈率
-N = 50  # 网络节点数
+N = 34  # 网络节点数
 t_range = np.arange(0, 50, 10e-2)  # 常微分方程迭代步数
 
 # 开始随机选不同两个节点染毒（Internet_state: 网络状态，source_1, source_2 都是node的id）
@@ -30,8 +30,8 @@ scale_free_network = nx.random_graphs.barabasi_albert_graph(N, 1)
 adjacent_Matrix = nx.to_numpy_matrix(scale_free_network)
 
 # 按照文件初始化网络
-karate_G = nx.read_gml('.\data\\karate.gml')
-
+karate_G = nx.read_gml('data\\karate.gml', label='id')
+_adjacent_Matrix = nx.to_numpy_matrix(scale_free_network)
 
 # Y = dict()
 # Y['susceptible'] = np.zeros(N)
@@ -47,7 +47,7 @@ def diff_eqs(net_state, t):
         neighbor_sum = 0
         for j in range(N):
             # 得到邻居节点的感染状况
-            neighbor_sum += adjacent_Matrix[i, j] * net_state[j]
+            neighbor_sum += _adjacent_Matrix[i, j] * net_state[j]
         Y[i] = (1 - net_state[i]) * BETA * neighbor_sum - GAMMA * net_state[i]
     return Y
 
