@@ -26,8 +26,8 @@ def diff_eqs(INP, t):
     return Y  # For odeint
 
 
-t_start = 0.0;
-t_end = ND;
+t_start = 0.0
+t_end = ND
 t_inc = TS
 t_range = np.arange(t_start, t_end + t_inc, t_inc)
 RES = spi.odeint(diff_eqs, INPUT, t_range)
