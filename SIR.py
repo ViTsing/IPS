@@ -25,9 +25,12 @@ while source_2 == source_1:
 Internet_state[source_1] = 1
 Internet_state[source_2] = 1
 
-# 初始化网络
+# 随机初始化网络
 scale_free_network = nx.random_graphs.barabasi_albert_graph(N, 1)
 adjacent_Matrix = nx.to_numpy_matrix(scale_free_network)
+
+# 按照文件初始化网络
+karate_G = nx.read_gml('.\data\\karate.gml')
 
 
 # Y = dict()
