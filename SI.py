@@ -1,45 +1,81 @@
 # -*- coding: utf-8 -*-
+# @Time    : 2018/3/27 18:00
+# @Author  : timothy
+# susceptible infected model (individual)
 
 import scipy.integrate as spi
 import numpy as np
 import pylab as pl
+import networkx as nx
+import random as rd
 
-beta = 1.4247
-"""the likelihood that the disease will be transmitted from an infected to a susceptible
-individual in a unit time is β"""
-gamma = 0
-# gamma is the recovery rate and in SI model, gamma equals zero
-I0 = 1e-6
-# I0 is the initial fraction of infected individuals
-ND = 70
-# ND is the total time step
-TS = 1.0
-INPUT = (1.0 - I0, I0)
+# 初始化
+BETA = 0.5  # 感染率
+# GAMMA = 0.2  # 治愈率
+N = 50  # 网络节点数
+t_range = np.arange(0, 50, 0.1)  # 常微分方程迭代步数
+
+# 开始随机选不同两个节点染毒（Internet_state: 网络状态，source_1, source_2 都是node的id）
+Internet_state = np.zeros(N)
+source_1 = rd.randint(0, N)
+source_2 = source_1
+while source_2 == source_1:
+    source_2 = rd.randint(0, N)
+# 修改source 1，2 为感染态
+Internet_state[source_1] = 1
+Internet_state[source_2] = 1
+
+# 初始化网络
+scale_free_network = nx.random_graphs.barabasi_albert_graph(N, 1)
+adjacent_Matrix = nx.to_numpy_matrix(scale_free_network)
 
 
-def diff_eqs(INP, t):
-    '''The main set of equations'''
-    Y = np.zeros((2))
-    V = INP
-    Y[0] = - beta * V[0] * V[1] + gamma * V[1]
-    Y[1] = beta * V[0] * V[1] - gamma * V[1]
-    return Y  # For odeint
+# 常微分方程组
+def diff_eqs(net_state, t):
+    y = np.zeros(N)
+    for i in range(N):
+        # 节点i邻居的感染情况那个sigma
+        neighbor_sum = 0
+        for j in range(N):
+            # 得到邻居节点的感染状况
+            neighbor_sum += adjacent_Matrix[i, j] * net_state[j]
+            y[i] = (1 - net_state[i]) * BETA * neighbor_sum
+    return y
 
 
-t_start = 0.0
-t_end = ND
-t_inc = TS
-t_range = np.arange(t_start, t_end + t_inc, t_inc)
-RES = spi.odeint(diff_eqs, INPUT, t_range)
-"""RES is the result of fraction of susceptibles and infectious individuals at each time step respectively"""
-print(RES)
+# 开始计算,迭代t_range次
+def run_ode():
+    result = spi.odeint(func=diff_eqs, y0=Internet_state, t=t_range)
+    return result
 
-# Ploting
-pl.plot(RES[:, 0], '-bs', label='Susceptibles')
-pl.plot(RES[:, 1], '-ro', label='Infectious')
-pl.legend(loc=0)
-pl.title('SI epidemic without births or deaths')
-pl.xlabel('Time')
-pl.ylabel('Susceptibles and Infectious')
-pl.savefig('2.5-SI-high.png', dpi=900)  # This does increase the resolution.
-pl.show()
+
+# 出图
+def plot(infected, _infected):
+    pl.plot(infected, '-rs', label='infected')
+    pl.plot(_infected, 'o', label='_infected')
+    pl.legend(loc=0)
+    pl.xlabel('Time')
+    pl.ylabel('Ratio')
+    pl.show()
+
+
+def main():
+    result = run_ode()
+    print('shape of result:', result.shape)
+    # axis = 0 :
+    result_mean = np.mean(result, axis=1)  # 染毒节点平均占比
+    for j in range(result.shape[1]):
+        for i in range(result.shape[0]):
+            _rd = np.random.RandomState()
+            rd_mean = _rd.uniform(0, 1)
+            print(rd_mean)
+            if result[i][j] >= rd_mean:
+                result[i][j] = 1
+            else:
+                result[i][j] = 0
+    _result_mean = np.mean(result, axis=1)
+    plot(result_mean, _result_mean)
+
+
+if __name__ == '__main__':
+    main()
