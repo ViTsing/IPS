@@ -68,7 +68,6 @@ def main():
         for i in range(result.shape[0]):
             _rd = np.random.RandomState()
             rd_mean = _rd.uniform(0, 1)
-            print(rd_mean)
             if result[i][j] >= rd_mean:
                 result[i][j] = 1
             else:
