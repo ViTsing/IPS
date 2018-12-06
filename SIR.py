@@ -17,10 +17,10 @@ t_range = np.arange(0, 50, 10e-2)  # 常微分方程迭代步数
 
 # 开始随机选不同两个节点染毒（Internet_state: 网络状态，source_1, source_2 都是node的id）
 Internet_state = np.zeros(N)
-source_1 = rd.randint(0, N)
+source_1 = rd.randint(0, N - 1)
 source_2 = source_1
 while source_2 == source_1:
-    source_2 = rd.randint(0, N)
+    source_2 = rd.randint(0, N - 1)
 # 修改source 1，2 为感染态
 Internet_state[source_1] = 1
 Internet_state[source_2] = 1
@@ -31,7 +31,8 @@ adjacent_Matrix = nx.to_numpy_matrix(scale_free_network)
 
 # 按照文件初始化网络
 karate_G = nx.read_gml('data\\karate.gml', label='id')
-_adjacent_Matrix = nx.to_numpy_matrix(scale_free_network)
+_adjacent_Matrix = nx.to_numpy_matrix(karate_G)
+
 
 # Y = dict()
 # Y['susceptible'] = np.zeros(N)
@@ -70,7 +71,11 @@ def plot(result):
 def main():
     result = run_ode()
     result_mean = np.mean(result, axis=1)  # 染毒节点平均占比
-    plot(result_mean)
+    # plot(result_mean)
+
+    final_state = result[:, -1]
+    nx.draw(karate_G, with_labels=True)
+    pl.show()
 
 
 if __name__ == '__main__':
