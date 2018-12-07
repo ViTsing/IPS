@@ -18,3 +18,14 @@ class LPSI:
         _matrix_s = np.multiply(_matrix_d, self.adjacent_matrix)
         matrix_s = np.multiply(_matrix_s, _matrix_d)
         return matrix_s
+
+    def get_converge(self):
+        matrix_i = np.identity(len(self.adjacent_matrix[0]))
+        matrix_s = self.produce_S()
+        _y = np.array(self.net_state)
+        y = _y.reshape((-1, 1))
+        _mtrx = np.matrix(matrix_i - self.alpha * matrix_s)
+        t_mtrx = _mtrx.I
+        _converge = np.multiply((1 - self.alpha), t_mtrx)
+        converge = np.multiply(_converge, y)
+        return converge
