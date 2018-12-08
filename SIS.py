@@ -6,7 +6,6 @@
 import scipy.integrate as spi
 import numpy as np
 import pylab as pl
-import matplotlib.pyplot as plt
 import networkx as nx
 import random as rd
 
@@ -30,6 +29,8 @@ class SIS:
         # 修改source 1，2 为感染态
         self.Internet_state[source_1] = 1
         self.Internet_state[source_2] = 1
+        print('source_1', source_1)
+        print('source_2', source_2)
         return
 
     def init_Graph(self, file, label, r_flag=False):
