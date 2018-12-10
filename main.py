@@ -6,9 +6,10 @@ from operator import itemgetter
 
 
 def main():
+    top_k = 5
     sis_range = np.arange(0, 50, 10e-2)
     sis = SIS(0.5, 0.2, 34, sis_range)
-    list_source = sis.random_source(2)
+    list_source = sis.random_source(top_k)
     sis.init_Graph('data\\karate.gml', 'id')
     result = sis.run_ode()
     print('shape of result:', result.shape)
@@ -33,7 +34,7 @@ def main():
         node_labels[i] = str(round(j, 2))
     r_c = sorted(l_c, key=itemgetter(1), reverse=True)
     result_list = list()
-    for j, score in r_c[0:2]:
+    for j, score in r_c[0:top_k]:
         result_list.append(j)
     print(list_source, result_list)
     sis.show(labels=node_labels)

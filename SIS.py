@@ -105,8 +105,6 @@ class SIS:
 
                          labels=labels, font_size=10, font_weight='normal',
 
-                         font_family="Times NewRoman",
-
                          label=['Final state']
 
                          )
