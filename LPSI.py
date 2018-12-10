@@ -7,8 +7,7 @@ class LPSI:
         self.adjacent_matrix = adjacent_matrix
         self.alpha = alpha
         self.net_state = original_y
-
-        self.matrix_S = self.produce_S()
+        # self.matrix_S = self.produce_S()
 
     def produce_S(self):
         _matrix_d = np.zeros(self.adjacent_matrix.shape)

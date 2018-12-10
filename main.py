@@ -2,12 +2,13 @@ from LPSI import LPSI
 from SIS import SIS
 import numpy as np
 import pylab as pl
+from operator import itemgetter
 
 
 def main():
     sis_range = np.arange(0, 50, 10e-2)
     sis = SIS(0.5, 0.2, 34, sis_range)
-    sis.random_source()
+    list_source = sis.random_source(2)
     sis.init_Graph('data\\karate.gml', 'id')
     result = sis.run_ode()
     print('shape of result:', result.shape)
@@ -23,8 +24,19 @@ def main():
 
     lpsi = LPSI(sis.adjacent_Matrix, 0.5, net_state)
     c = lpsi.get_converge()
-    c = np.ndarray.reshape(c, -1, 1)
-    print(c, type(c))
+    c = np.array(c)
+    c = enumerate(list(c.T[0, :]))
+    l_c = []
+    node_labels = dict()
+    for i, j in c:
+        l_c.append((i, j))
+        node_labels[i] = str(round(j, 2))
+    r_c = sorted(l_c, key=itemgetter(1), reverse=True)
+    result_list = list()
+    for j, score in r_c[0:2]:
+        result_list.append(j)
+    print(list_source, result_list)
+    sis.show(labels=node_labels)
 
 
 # 出图
