@@ -12,7 +12,7 @@ def main():
     list_source = sis.random_source(top_k)
     sis.init_Graph('data\\karate.gml', 'id')
     result = sis.run_ode()
-    print('shape of result:', result.shape)
+    # print('shape of result:', result.shape)
     # axis = 0 :
     result_mean = np.mean(result, axis=1)  # 染毒节点平均占比
 
@@ -33,11 +33,17 @@ def main():
         l_c.append((i, j))
         node_labels[i] = str(round(j, 2))
     r_c = sorted(l_c, key=itemgetter(1), reverse=True)
-    result_list = list()
+    list_predict = list()
     for j, score in r_c[0:top_k]:
-        result_list.append(j)
-    print(list_source, result_list)
-    sis.show(labels=node_labels)
+        list_predict.append(j)
+    count = 0
+    for item in list_predict:
+        if item in list_source:
+            count += 1
+    print('precision', count / top_k)
+    # print('Result:', list_source, list_predict)
+    # sis.show(labels=node_labels)
+    return count / top_k
 
 
 # 出图
@@ -51,4 +57,10 @@ def plot(infected, _infected):
 
 
 if __name__ == '__main__':
-    main()
+    sum_p = 0
+    for i in range(500):
+        sum_p += main()
+        i += 1
+        print(i)
+    average = sum_p / 500
+    print(average)
