@@ -23,7 +23,7 @@ def main():
 
     net_state = sample_result[-1, :]
 
-    lpsi = LPSI(sis.adjacent_Matrix, 0.5, net_state)
+    lpsi = LPSI(sis.adjacent_Matrix, 0.4, net_state)
     c = lpsi.get_converge()
     c = np.array(c)
     c = enumerate(list(c.T[0, :]))
@@ -57,10 +57,11 @@ def plot(infected, _infected):
 
 
 if __name__ == '__main__':
+    run_times = 10
     sum_p = 0
-    for i in range(500):
+    for i in range(run_times):
         sum_p += main()
         i += 1
         print(i)
-    average = sum_p / 500
+    average = sum_p / run_times
     print(average)
