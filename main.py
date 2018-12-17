@@ -42,7 +42,7 @@ def main():
             count += 1
     print('precision', count / top_k)
     # print('Result:', list_source, list_predict)
-    # sis.show(labels=node_labels)
+    sis.show(labels=node_labels)
     return count / top_k
 
 
@@ -57,7 +57,7 @@ def plot(infected, _infected):
 
 
 if __name__ == '__main__':
-    run_times = 10
+    run_times = 1
     sum_p = 0
     for i in range(run_times):
         sum_p += main()
