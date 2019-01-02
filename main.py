@@ -7,6 +7,7 @@ from operator import itemgetter
 
 def main():
     top_k = 5
+    beta = 1
     sis_range = np.arange(0, 50, 10e-2)
     sis = SIS(0.5, 0.2, 34, sis_range)
     list_source = sis.random_source(top_k)
@@ -42,8 +43,11 @@ def main():
             count += 1
     print('precision', count / top_k)
     # print('Result:', list_source, list_predict)
-    sis.show(labels=node_labels)
-    return count / top_k
+    # sis.show(labels=node_labels)
+    precision = count / top_k
+    recall = count / 2
+    f_score = (2 * precision * recall) / (precision + recall + 0.001)
+    return f_score
 
 
 # 出图
@@ -57,7 +61,7 @@ def plot(infected, _infected):
 
 
 if __name__ == '__main__':
-    run_times = 1
+    run_times = 30
     sum_p = 0
     for i in range(run_times):
         sum_p += main()
