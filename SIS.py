@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2018/3/27 18:00
-# @Author  : timothy
+# @Time    : 2018/11/27 18:00
+# @Author  : RRR
 # susceptible infected susceptible model
 
 import scipy.integrate as spi

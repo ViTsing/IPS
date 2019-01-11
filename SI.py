@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2018/3/27 18:00
-# @Author  : timothy
+# @Time    : 2018/111/27 18:00
+# @Author  : RRR
 # susceptible infected susceptible model
 
 import scipy.integrate as spi
@@ -72,6 +72,10 @@ class SI:
         return result
 
     def sample_result(self, result):
+        '''
+        :param result:
+        :return:     # 采样生成网络状态
+        '''
         for j in range(result.shape[1]):
             for i in range(result.shape[0]):
                 _rd = np.random.RandomState()
@@ -121,7 +125,6 @@ def main():
     print('shape of result:', result.shape)
     # axis = 0 :
     result_mean = np.mean(result, axis=1)  # 染毒节点平均占比
-
     _result = sis.sample_result(result)
     _result_mean = np.mean(_result, axis=1)
 
