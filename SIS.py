@@ -5,7 +5,7 @@
 
 import scipy.integrate as spi
 import numpy as np
-import pylab as pl
+import matplotlib.pylab as pl
 import networkx as nx
 import random as rd
 
