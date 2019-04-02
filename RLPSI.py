@@ -1,4 +1,5 @@
 from LPSI import LPSI
+from SI import SI
 from SIS import SIS
 import numpy as np
 import pylab as pl
@@ -28,26 +29,27 @@ def RLPSI(j, net_state, sis_range):
 
 
 def main():
-    ifRLPSI = False
+    # 是否使用相似度优化
+    if_rlpsi = False
     top_k = 5
     beta = 1
     sis_range = np.arange(0, 50, 10e-2)
-    sis = SIS(0.5, 0.2, 34, sis_range)
-    list_source = sis.random_source(top_k)
-    sis.init_Graph('data\\karate.gml', 'id')
-    result = sis.run_ode()
+    ipm = SI(0.5, 0.2, 34, sis_range)
+    list_source = ipm.random_source(top_k)
+    ipm.init_Graph('data\\karate.gml', 'id')
+    result = ipm.run_ode()
     # print('shape of result:', result.shape)
     # axis = 0 :
     result_mean = np.mean(result, axis=1)  # 染毒节点平均占比
 
-    sample_result = sis.sample_result(result)
+    sample_result = ipm.sample_result(result)
     _result_mean = np.mean(sample_result, axis=1)
 
     # plot(result_mean, _result_mean)
 
     net_state = sample_result[-1, :]
 
-    lpsi = LPSI(sis.adjacent_Matrix, 0.4, net_state)
+    lpsi = LPSI(ipm.adjacent_Matrix, 0.4, net_state)
     c = lpsi.get_converge()
     c = np.array(c)
     c = enumerate(list(c.T[0, :]))
@@ -59,7 +61,8 @@ def main():
     # 标签迭代结果
     r_c = sorted(l_c, key=itemgetter(1), reverse=True)
 
-    if ifRLPSI is True:
+    # 若使用优化
+    if if_rlpsi is True:
         f_c = list()
 
         for j, score in r_c:
@@ -72,7 +75,7 @@ def main():
         f_c = sorted(f_c, key=itemgetter(1), reverse=True)
         r_c = f_c
 
-        # 按顺序选取top-k构成候选节点集
+    # 按顺序选取top-k构成候选节点集
     list_predict = list()
     for j, score in r_c[0:top_k]:
         list_predict.append(j)
@@ -83,7 +86,7 @@ def main():
             count += 1
     print('precision', count / top_k)
     # print('Result:', list_source, list_predict)
-    sis.show(labels=node_labels)
+    ipm.show(labels=node_labels)
     precision = count / top_k
     recall = count / 2
     f_score = (2 * precision * recall) / (precision + recall + 0.001)

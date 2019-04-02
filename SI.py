@@ -11,7 +11,7 @@ import random as rd
 
 
 class SI:
-    def __init__(self, beta, n_nodes, t_range):
+    def __init__(self, beta, gamma, n_nodes, t_range):
         # 初始化
         self.BETA = beta  # 感染率
         self.N = n_nodes  # 网络节点数
@@ -117,15 +117,15 @@ class SI:
 
 
 def main():
-    sis_range = np.arange(0, 50, 10e-2)
-    sis = SI(0.5, 34, sis_range)
-    sis.random_source(2)
-    sis.init_Graph('data\\karate.gml', 'id')
-    result = sis.run_ode()
+    _range = np.arange(0, 50, 10e-2)
+    model_func = SI(0.5, 34, _range)
+    model_func.random_source(2)
+    model_func.init_Graph('data\\karate.gml', 'id')
+    result = model_func.run_ode()
     print('shape of result:', result.shape)
     # axis = 0 :
     result_mean = np.mean(result, axis=1)  # 染毒节点平均占比
-    _result = sis.sample_result(result)
+    _result = model_func.sample_result(result)
     _result_mean = np.mean(_result, axis=1)
 
     # 出图
@@ -138,7 +138,7 @@ def main():
         pl.show()
 
     # plot(result_mean, _result_mean)
-    sis.show()
+    model_func.show()
 
 
 if __name__ == '__main__':

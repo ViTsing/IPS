@@ -114,29 +114,29 @@ class SIS:
 
 
 def main():
-    sis_range = np.arange(0, 50, 10e-2)
-    sis = SIS(0.5, 0.2, 34, sis_range)
-    sis.random_source(2)
-    sis.init_Graph('data\\karate.gml', 'id')
-    result = sis.run_ode()
+    _range = np.arange(0, 50, 10e-2)
+    model_func = SIS(0.5, 0.2, 34, _range)
+    model_func.random_source(2)
+    model_func.init_Graph('data\\karate.gml', 'id')
+    result = model_func.run_ode()
     print('shape of result:', result.shape)
     # axis = 0 :
     result_mean = np.mean(result, axis=1)  # 染毒节点平均占比
 
-    _result = sis.sample_result(result)
+    _result = model_func.sample_result(result)
     _result_mean = np.mean(_result, axis=1)
 
     # 出图
-    def plot(infected, _infected):
-        pl.plot(infected, '-rs', label='infected')
-        pl.plot(_infected, 'o', label='_infected')
-        pl.legend(loc=0)
-        pl.xlabel('Time')
-        pl.ylabel('Ratio')
-        pl.show()
-
+    # def plot(infected, _infected):
+    #     pl.plot(infected, '-rs', label='infected')
+    #     pl.plot(_infected, 'o', label='_infected')
+    #     pl.legend(loc=0)
+    #     pl.xlabel('Time')
+    #     pl.ylabel('Ratio')
+    #     pl.show()
     # plot(result_mean, _result_mean)
-    sis.show()
+
+    model_func.show()
 
 
 if __name__ == '__main__':
