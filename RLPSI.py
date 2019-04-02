@@ -28,6 +28,7 @@ def RLPSI(j, net_state, sis_range):
 
 
 def main():
+    ifRLPSI = False
     top_k = 5
     beta = 1
     sis_range = np.arange(0, 50, 10e-2)
@@ -58,19 +59,22 @@ def main():
     # 标签迭代结果
     r_c = sorted(l_c, key=itemgetter(1), reverse=True)
 
-    f_c = list()
+    if ifRLPSI is True:
+        f_c = list()
 
-    for j, score in r_c:
-        # 可多次计算取平均
-        R_score = RLPSI(j, net_state, sis_range)
-        F_score = 0.3 * R_score + 0.7 / (1 + E ** (-score))
-        t = (j, F_score)
-        f_c.append(t)
+        for j, score in r_c:
+            # 可多次计算取平均
+            R_score = RLPSI(j, net_state, sis_range)
+            F_score = 0.3 * R_score + 0.7 / (1 + E ** (-score))
+            t = (j, F_score)
+            f_c.append(t)
 
-    f_c = sorted(f_c, key=itemgetter(1), reverse=True)
-    # 按顺序选取top-k构成候选节点集
+        f_c = sorted(f_c, key=itemgetter(1), reverse=True)
+        r_c = f_c
+
+        # 按顺序选取top-k构成候选节点集
     list_predict = list()
-    for j, score in f_c[0:top_k]:
+    for j, score in r_c[0:top_k]:
         list_predict.append(j)
     count = 0
     # 如果命中count自增
@@ -79,15 +83,14 @@ def main():
             count += 1
     print('precision', count / top_k)
     # print('Result:', list_source, list_predict)
-    # sis.show(labels=node_labels)
+    sis.show(labels=node_labels)
     precision = count / top_k
     recall = count / 2
     f_score = (2 * precision * recall) / (precision + recall + 0.001)
     return f_score
 
-    # 出图
 
-
+# 出图
 def plot(infected, _infected):
     pl.plot(infected, '-rs', label='infected')
     pl.plot(_infected, 'o', label='_infected')
