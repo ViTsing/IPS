@@ -1,6 +1,7 @@
 from LPSI import LPSI
 from SI import SI
 from SIS import SIS
+from SIR import SIR
 import numpy as np
 import pylab as pl
 from operator import itemgetter
@@ -8,16 +9,16 @@ from COS import cosine_dist
 from math import e as E
 
 
-def RLPSI(j, net_state, sis_range):
-    sis_cov = SIS(0.5, 0.2, 34, sis_range)
-    sis_cov.Internet_state[j] = 1
-    sis_cov.init_Graph('data\\karate.gml', 'id')
-    result_cov = sis_cov.run_ode()
-    sample_cov = sis_cov.sample_result(result_cov)
+def RLPSI(j, net_state, iteration_range):
+    model_cov = SIS(0.5, 0.2, 34, iteration_range)
+    model_cov.Internet_state[j] = 1
+    model_cov.init_Graph('data\\karate.gml', 'id')
+    result_cov = model_cov.run_ode()
+    sample_cov = model_cov.sample_result(result_cov)
     net_state_cov = sample_cov[-1, :]
     score_cov = cosine_dist(net_state, net_state_cov)
 
-    sis_half = SIS(0.5, 0.2, 34, sis_range / 2)
+    sis_half = SIS(0.5, 0.2, 34, iteration_range / 2)
     sis_half.Internet_state[j] = 1
     sis_half.init_Graph('data\\karate.gml', 'id')
     result_half = sis_half.run_ode()
@@ -32,9 +33,8 @@ def main():
     # 是否使用相似度优化
     if_rlpsi = False
     top_k = 5
-    beta = 1
-    sis_range = np.arange(0, 50, 10e-2)
-    ipm = SI(0.5, 0.2, 34, sis_range)
+    iteration_range = np.arange(0, 50, 10e-2)
+    ipm = SIR(0.5, 0.2, 34, iteration_range)
     list_source = ipm.random_source(top_k)
     ipm.init_Graph('data\\karate.gml', 'id')
     result = ipm.run_ode()
@@ -67,7 +67,7 @@ def main():
 
         for j, score in r_c:
             # 可多次计算取平均
-            R_score = RLPSI(j, net_state, sis_range)
+            R_score = RLPSI(j, net_state, iteration_range)
             F_score = 0.3 * R_score + 0.7 / (1 + E ** (-score))
             t = (j, F_score)
             f_c.append(t)

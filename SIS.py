@@ -37,14 +37,14 @@ class SIS:
         #     print("infected source id: ", i)
         return list_source
 
-    def init_Graph(self, file, label, r_flag=False):
+    def init_Graph(self, file, label, rand_flag=False):
         '''
         初始化图结构
-        :param r_flag: 随机初始化标志
+        :param rand_flag: 随机初始化标志
         :param file:
         :return: 邻接矩阵
         '''
-        if r_flag is False:
+        if rand_flag is False:
             self.Graph = nx.random_graphs.barabasi_albert_graph(self.N, 1)
             self.adjacent_Matrix = nx.to_numpy_matrix(self.Graph)
         else:
