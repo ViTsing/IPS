@@ -41,6 +41,7 @@ for t in range(n_iter):
     F = np.dot(S, F) * alpha + (1 - alpha) * Y_input
 
 Y_result = np.zeros_like(F)
+# softmax and classific
 Y_result[np.arange(len(F)), F.argmax(1)] = 1
 
 Y_v = [1 if x == 0 else 0 for x in Y_result[0:, 0]]
