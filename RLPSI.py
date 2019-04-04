@@ -10,7 +10,7 @@ from math import e as E
 
 
 def RLPSI(j, net_state, iteration_range):
-    model_cov = SIS(0.5, 0.2, 34, iteration_range)
+    model_cov = SIR(0.5, 0.2, 34, iteration_range)
     model_cov.Internet_state[j] = 1
     model_cov.init_Graph('data\\karate.gml', 'id')
     result_cov = model_cov.run_ode()
@@ -29,13 +29,13 @@ def RLPSI(j, net_state, iteration_range):
     return (score_cov + score_half) / 2
 
 
-def main():
+def evaluate():
     # 是否使用相似度优化
     if_rlpsi = False
-    top_k = 5
+    num_source = 5
     iteration_range = np.arange(0, 50, 10e-2)
     ipm = SIR(0.5, 0.2, 34, iteration_range)
-    list_source = ipm.random_source(top_k)
+    list_source = ipm.random_source(num_source)
     ipm.init_Graph('data\\karate.gml', 'id')
     result = ipm.run_ode()
     # print('shape of result:', result.shape)
@@ -77,17 +77,17 @@ def main():
 
     # 按顺序选取top-k构成候选节点集
     list_predict = list()
-    for j, score in r_c[0:top_k]:
+    for j, score in r_c[0:num_source]:
         list_predict.append(j)
     count = 0
     # 如果命中count自增
     for item in list_predict:
         if item in list_source:
             count += 1
-    print('precision', count / top_k)
+    print('precision', count / num_source)
     # print('Result:', list_source, list_predict)
     ipm.show(labels=node_labels)
-    precision = count / top_k
+    precision = count / num_source
     recall = count / 2
     f_score = (2 * precision * recall) / (precision + recall + 0.001)
     return f_score
@@ -107,7 +107,7 @@ if __name__ == '__main__':
     run_times = 30
     sum_p = 0
     for i in range(run_times):
-        sum_p += main()
+        sum_p += evaluate()
         i += 1
         print(i)
     average = sum_p / run_times
