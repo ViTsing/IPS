@@ -13,6 +13,6 @@ def cosine_dist(x, y):
 
 
 if __name__ == '__main__':
-    a = [1, 2, 3]
-    b = [4, 3, 2]
+    a = [2, 2, 0]
+    b = [0, 0, 1]
     print(cosine_dist(a, b))
