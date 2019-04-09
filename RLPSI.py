@@ -104,7 +104,7 @@ def plot(infected, _infected):
 
 
 if __name__ == '__main__':
-    run_times = 30
+    run_times = 500
     sum_p = 0
     for i in range(run_times):
         sum_p += evaluate()
