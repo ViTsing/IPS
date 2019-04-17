@@ -22,7 +22,7 @@ def evaluate():
         ipm.init_Graph('data\\karate.gml', 'id')
     else:
         N_node = 198
-        num_source = 10
+        num_source = 5
         iteration_range = np.arange(0, 50, 10e-2)
         ipm = SIR(0.5, 0.2, N_node, iteration_range)
         list_source = ipm.random_source(num_source)
@@ -35,7 +35,7 @@ def evaluate():
     t_net_state = []
     for item in net_state:
         if item == 0.:
-            t_net_state.append(0.0)
+            t_net_state.append(-1.0)
         else:
             t_net_state.append(1.0)
     lpsi = LPSI(ipm.adjacent_Matrix, 0.5, net_state)
@@ -43,23 +43,25 @@ def evaluate():
     c = np.array(c)
     c = c.T[0, :]
 
-    # 反向推演
-    _net_state = []
-    for item in net_state:
-        if item == 0.:
-            _net_state.append(1.0)
-        else:
-            _net_state.append(0.0)
-    _lpsi = LPSI(ipm.adjacent_Matrix, 0.5, _net_state)
-    _c = _lpsi.get_converge()
-    _c = np.array(_c)
-    _c = _c.T[0, :]
-
-    # 结合
-    all_c = np.true_divide(c, _c)
+    # # 反向推演
+    # _net_state = []
+    # for item in net_state:
+    #     if item == 0.:
+    #         _net_state.append(1.0)
+    #     else:
+    #         _net_state.append(-1.0)
+    # _lpsi = LPSI(ipm.adjacent_Matrix, 0.5, _net_state)
+    # _c = _lpsi.get_converge()
+    # _c = np.array(_c)
+    # _c = _c.T[0, :]
+    #
+    # # 结合
+    # c = c + 1
+    # _c = _c + 1
+    # all_c = np.true_divide(c, _c)
 
     # 相似度
-    c = enumerate(list(all_c))
+    c = enumerate(list(c))
     l_c = []
     node_labels = dict()
     for i, j in c:
@@ -86,7 +88,7 @@ def evaluate():
 
 
 if __name__ == '__main__':
-    run_times = 500
+    run_times = 150
     sum_p = 0
     for i in range(run_times):
         sum_p += evaluate()
