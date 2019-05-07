@@ -20,7 +20,7 @@ def evaluate():
         ipm = SIR(0.5, 0.2, N_node, iteration_range)
         list_source = ipm.random_source(num_source)
         ipm.init_Graph('data\\karate.gml', 'id')
-    else:
+    elif dataset == 'jazz':
         N_node = 198
         num_source = 5
         iteration_range = np.arange(0, 50, 10e-2)
@@ -88,7 +88,7 @@ def evaluate():
 
 
 if __name__ == '__main__':
-    run_times = 150
+    run_times = 30
     sum_p = 0
     for i in range(run_times):
         sum_p += evaluate()
